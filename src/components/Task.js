@@ -17,6 +17,15 @@ class Task extends React.Component {
     taskList: [],
   };
 
+  compare = (a, b) => {
+      if(a.taskStatus == b.taskStatus) return 0;
+      if(a.taskStatus == "Completed") return 1;
+      if(a.taskStatus == "Pending") return -1;
+      if(b.taskStatus == "Completed") return -1;
+      if(b.taskStatus == "Pending") return 1;
+      return 0;
+  }
+
   componentDidMountAsst = async () => {
     const uid = JSON.parse(localStorage.getItem("user")).id;
     const currentCospace = localStorage.getItem("recent_cospace_clicked");
@@ -28,6 +37,7 @@ class Task extends React.Component {
           datas.push(task);
         }
       });
+      datas.sort(this.compare);
       this.setState({ taskList: datas });
     } catch (error) {
       console.log(error);
@@ -108,13 +118,46 @@ class Task extends React.Component {
           }
       }
       this.setState({ originalTasks });
-    //   await takeTask(currentTask);
-      NotificationManager.info("Task taken successfully!!");
+
+      axios
+      .patch("http://localhost:8000/task/take/" + currentTask, {actor: this.state.assignedBy})
+      .then(() => {
+          NotificationManager.success("Task taken successfully!!");
+      })
+      .catch(() => {
+          NotificationManager.info("Something went wrong!!");
+      })
     } catch (error) {
       this.setState({ taskList: originalTasks });
       console.log(error);
     }
   }
+
+  handleDone = async(currentTask) => {
+    const originalTasks = this.state.taskList;
+    try {
+      for(let task of originalTasks){
+          if(task._id === currentTask){
+              task.takenBy = this.state.assignedBy;
+              task.taskStatus = "Completed";
+          }
+      }
+      this.setState({ originalTasks });
+
+      axios
+      .patch("http://localhost:8000/task/done/" + currentTask)
+      .then(() => {
+          NotificationManager.success("Task Completed successfully!!");
+      })
+      .catch(() => {
+          NotificationManager.info("Something went wrong!!");
+      })
+    } catch (error) {
+      this.setState({ taskList: originalTasks });
+      console.log(error);
+    }
+  }
+
 
   render() {
     let { taskList } = this.state;
@@ -212,12 +255,21 @@ class Task extends React.Component {
                 </div>
                 <div className="taskcontrols">
                   <div className="edittasks">
-                    <button
+                    {   (task.taskStatus !== "Completed") ?
+                        task.takenBy == this.state.assignedBy?
+                        <button
+                        id="donebtn"
+                        onClick={() => this.handleDone(task._id)}
+                        >
+                        Done
+                      </button>
+                     : <button
                       id="editbtn"
                       onClick={() => this.handleTake(task._id)}
                       >
                       Take
                     </button>
+                    :" "}
                   </div>
                   <div className="deletetasks">
                     <button

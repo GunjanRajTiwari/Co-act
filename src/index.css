@@ -969,8 +969,12 @@ nav {
   background-color: #0095ff;
 }
 
+#donebtn {
+  background-color: #1ebb52;
+}
+
 #deletebtn {
-  background-color: rgb(255, 0, 0);
+  background-color: rgb(218, 19, 19);
 }
 
 /* .coactorssection */

@@ -40,6 +40,7 @@ router.get("/task-detail/:id", (req, res) => {
       });
     });
 });
+
 router.delete("/:id", async (req, res) => {
   try {
     const task = await Task.findByIdAndDelete(req.params.id);
@@ -48,4 +49,31 @@ router.delete("/:id", async (req, res) => {
     res.send(error);
   }
 });
+
+router.patch("/take/:id", async (req, res) => {
+  try {
+    const actor = req.body.actor;
+    const id = req.params.id;
+    const task = await Task.findByIdAndUpdate(id, {
+        takenBy: actor,
+        taskStatus: "In Progress"
+    });
+    res.send(task);
+  } catch (error) {
+    res.send(error);
+  }
+});
+
+router.patch("/done/:id", async (req, res) => {
+    try {
+      const id = req.params.id;
+      const task = await Task.findByIdAndUpdate(id, {
+          taskStatus: "Completed"
+      });
+      res.send(task);
+    } catch (error) {
+      res.send(error);
+    }
+  });
+
 module.exports = router;

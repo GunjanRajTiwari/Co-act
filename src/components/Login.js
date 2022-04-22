@@ -7,8 +7,8 @@ const Login = () => {
 
   return (
     <div className="googlelogin">
-      <button onClick={google}>
-        <img src="/images/Google.png" alt="googlelogo" />
+      <button  onClick={google}>
+        <img className="google-logo" src="/images/Google.png" alt="googlelogo" />
         <p>Sign In</p>
       </button>
     </div>

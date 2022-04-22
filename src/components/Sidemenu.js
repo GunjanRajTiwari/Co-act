@@ -5,15 +5,8 @@ const Sidemenu = (props) => {
 
   var todo_button_class_name = props.todo_button_class_name;
 
-  var cospace_png_src = "images/People.png";
-
-  var todo_png_src = "images/Todo List.png";
-
-  if (cospace_button_class_name === "selected") {
-    cospace_png_src = "images/People white.png";
-  } else {
-    todo_png_src = "images/Todo List white.png";
-  }
+  var cospace_png_src = "images/People white.png";
+  var todo_png_src = "images/Todo List white.png";
 
   return (
     <div className="sidemenu">
